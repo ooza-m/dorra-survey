@@ -764,6 +764,24 @@ function QuestionCard({
     boxSizing: "border-box",
   };
 
+  const handleTextInput = (e) => {
+    let value = e.currentTarget.value;
+
+    if (q.id === "q13") {
+      value = value.replace(/\D/g, "");
+      e.currentTarget.value = value;
+    }
+
+    onTextDraft(q.id, value);
+  };
+
+  const textInputProps =
+    q.id === "q13"
+      ? { inputMode: "numeric", pattern: "[0-9]*", maxLength: 20 }
+      : q.id === "q14"
+      ? { inputMode: "email" }
+      : {};
+
   const toggle = (opt) => {
     if (q.type === "single") {
       onAnswer(q.id, opt);
@@ -857,7 +875,7 @@ function QuestionCard({
         <textarea
           key={q.id}
           defaultValue={currentTextValue || ""}
-          onInput={(e) => onTextDraft(q.id, e.currentTarget.value)}
+          onInput={handleTextInput}
           onBlur={(e) => {
             onTextDraft(q.id, e.currentTarget.value);
             e.currentTarget.style.borderColor = C.mid;
@@ -873,8 +891,9 @@ function QuestionCard({
         <input
           key={q.id}
           type="text"
+          {...textInputProps}
           defaultValue={currentTextValue || ""}
-          onInput={(e) => onTextDraft(q.id, e.currentTarget.value)}
+          onInput={handleTextInput}
           onBlur={(e) => {
             onTextDraft(q.id, e.currentTarget.value);
             e.currentTarget.style.borderColor = C.mid;
@@ -1292,11 +1311,43 @@ export default function DorraSurvey() {
     return val === undefined || val === null || String(val).trim() === "";
   };
 
-  const next = () => {
+  const isValidEmail = (value) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value).trim());
+  };
+
+  const validateCurrentAnswer = () => {
     const ans = answersRef.current[q.id] ?? answers[q.id];
 
     if (q.required && isEmptyAnswer(ans)) {
-      setError("يرجى الإجابة قبل المتابعة 🌸");
+      return "يرجى الإجابة قبل المتابعة 🌸";
+    }
+
+    if (q.id === "q13" && !isEmptyAnswer(ans)) {
+      const phone = String(ans).trim();
+
+      if (!/^\d+$/.test(phone)) {
+        return "رقم الواتساب يجب أن يحتوي على أرقام فقط";
+      }
+
+      if (phone.length < 7) {
+        return "رقم الواتساب يجب ألا يقل عن 7 أرقام";
+      }
+    }
+
+    if (q.id === "q14" && !isEmptyAnswer(ans)) {
+      if (!isValidEmail(ans)) {
+        return "يرجى كتابة البريد الإلكتروني بصيغة صحيحة";
+      }
+    }
+
+    return "";
+  };
+
+  const next = () => {
+    const validationMessage = validateCurrentAnswer();
+
+    if (validationMessage) {
+      setError(validationMessage);
       return;
     }
 
@@ -1556,10 +1607,11 @@ export default function DorraSurvey() {
               marginTop: 12,
               padding: "10px 16px",
               borderRadius: 10,
-              background: "#FFF0F0",
-              color: "#C0392B",
+              background: C.light,
+              color: C.dark,
+              border: `1.5px solid ${C.mid}`,
               fontSize: 14,
-              fontWeight: 600,
+              fontWeight: 700,
             }}
           >
             {error}

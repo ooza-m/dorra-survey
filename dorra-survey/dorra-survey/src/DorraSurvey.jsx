@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 // ═══════════════════════════════════════════
 // COLORS — Rose/Pink palette from logo
@@ -24,11 +24,12 @@ const SHEET_URL = "https://script.google.com/macros/s/AKfycbwbqpDWm2tvn_M0Si4LVA
 
 async function sendToSheets(data) {
   try {
+    const form = new FormData();
+    form.append("data", JSON.stringify(data));
     await fetch(SHEET_URL, {
       method: "POST",
       mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
+      body: form
     });
   } catch (e) {
     console.log("Sheet sync failed:", e);
@@ -290,6 +291,8 @@ function Option({ label, selected, onClick, shape }) {
 }
 
 function QuestionCard({ q, answer, onChange, qIndex, total }) {
+  const inputRef = useRef(null);
+
   const toggle = (opt) => {
     if (q.type === "single") { onChange(opt); return; }
     if (q.type === "text" || q.type === "textarea") { onChange(opt); return; }
@@ -335,23 +338,27 @@ function QuestionCard({ q, answer, onChange, qIndex, total }) {
 
       {q.type === "textarea" ? (
         <textarea
-          value={answer || ""}
+          ref={inputRef}
+          key={q.id}
+          defaultValue={answer || ""}
+          onBlur={e => onChange(e.target.value)}
           onChange={e => onChange(e.target.value)}
           placeholder={q.placeholder}
           rows={5}
           style={{ ...inputStyle, resize:"vertical", lineHeight:1.8 }}
           onFocus={e => e.target.style.borderColor = C.primary}
-          onBlur={e => e.target.style.borderColor = C.mid}
         />
       ) : q.type === "text" ? (
         <input
+          ref={inputRef}
+          key={q.id}
           type="text"
-          value={answer || ""}
+          defaultValue={answer || ""}
+          onBlur={e => onChange(e.target.value)}
           onChange={e => onChange(e.target.value)}
           placeholder={q.placeholder}
           style={inputStyle}
           onFocus={e => e.target.style.borderColor = C.primary}
-          onBlur={e => e.target.style.borderColor = C.mid}
         />
       ) : (
         <div style={{ marginTop:8 }}>

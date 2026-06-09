@@ -310,7 +310,7 @@ const QUESTIONS = [
     text: "أين تقيمين؟",
     type: "select",
     required: true,
-    placeholder: "اختاري الإمارة أو مكان الإقامة",
+    placeholder: "اختاري مكان الإقامة",
     options: [
       "أبوظبي",
       "دبي",

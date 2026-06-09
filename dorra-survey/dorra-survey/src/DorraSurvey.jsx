@@ -1149,7 +1149,7 @@ export default function DorraSurvey() {
     }
 
     setAdminLoading(true);
-    setError("جاري تحميل النتائج من Google Sheets...");
+    setError("جاري التحميل");
 
     try {
       const remoteResponses = await fetchResponsesFromSheets();
@@ -1323,7 +1323,14 @@ export default function DorraSurvey() {
           )}
 
           {showAdmin && error && (
-            <div style={{ color: "tomato", fontSize: 12, marginTop: 6 }}>
+            <div
+              style={{
+                color: adminLoading ? C.dark : "tomato",
+                fontSize: 12,
+                marginTop: 6,
+                fontWeight: adminLoading ? 700 : 400,
+              }}
+            >
               {error}
             </div>
           )}

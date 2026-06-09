@@ -308,9 +308,11 @@ const QUESTIONS = [
     id: "q1c",
     section: 1,
     text: "أين تقيمين؟",
-    type: "single",
+    type: "select",
     required: true,
+    placeholder: "اختاري الإمارة أو مكان الإقامة",
     options: [
+      "أبوظبي",
       "دبي",
       "الشارقة",
       "عجمان",

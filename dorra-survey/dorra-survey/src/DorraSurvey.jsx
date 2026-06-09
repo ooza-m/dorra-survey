@@ -1149,7 +1149,7 @@ export default function DorraSurvey() {
     }
 
     setAdminLoading(true);
-    setError("جاري التحميل");
+    setError("");
 
     try {
       const remoteResponses = await fetchResponsesFromSheets();

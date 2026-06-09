@@ -20,7 +20,7 @@ const C = {
 // GOOGLE SHEETS WEBHOOK
 // Replace with your Google Apps Script URL
 // ═══════════════════════════════════════════
-const SHEET_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbwbqpDWm2tvn_M0Si4LVArjFcG9Oq11X5LLOuJ7zMglBJw7Mt3aOz3QPHbHf4HQ1KKF/exec";
 
 async function sendToSheets(data) {
   try {

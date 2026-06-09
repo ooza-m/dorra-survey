@@ -48,6 +48,63 @@ async function sendToSheets(data) {
   }
 }
 
+
+function fetchResponsesFromSheets() {
+  return new Promise((resolve, reject) => {
+    const callbackName =
+      "dorraSheetCallback_" +
+      Date.now() +
+      "_" +
+      Math.random().toString(36).slice(2);
+
+    const script = document.createElement("script");
+    const separator = SHEET_URL.includes("?") ? "&" : "?";
+
+    const cleanup = () => {
+      try {
+        delete window[callbackName];
+      } catch {
+        window[callbackName] = undefined;
+      }
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+
+    const timer = window.setTimeout(() => {
+      cleanup();
+      reject(new Error("انتهت مهلة تحميل النتائج من Google Sheets"));
+    }, 12000);
+
+    window[callbackName] = (payload) => {
+      window.clearTimeout(timer);
+      cleanup();
+
+      if (payload && payload.status === "ok" && Array.isArray(payload.responses)) {
+        resolve(payload.responses);
+      } else {
+        reject(new Error("صيغة الرد من Google Sheets غير صحيحة"));
+      }
+    };
+
+    script.onerror = () => {
+      window.clearTimeout(timer);
+      cleanup();
+      reject(new Error("تعذر الاتصال بـ Google Sheets"));
+    };
+
+    script.src =
+      SHEET_URL +
+      separator +
+      "callback=" +
+      encodeURIComponent(callbackName) +
+      "&t=" +
+      Date.now();
+
+    document.body.appendChild(script);
+  });
+}
+
 // ═══════════════════════════════════════════
 // QUESTIONS
 // ═══════════════════════════════════════════
@@ -1007,6 +1064,7 @@ export default function DorraSurvey() {
   const [adminPass, setAdminPass] = useState("");
   const [showAdmin, setShowAdmin] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [adminLoading, setAdminLoading] = useState(false);
 
   // هذا أهم جزء لحل مشكلة الكتابة:
   // نخزن كل الإجابات في ref حتى لا تعيد خانة الكتابة رسم نفسها مع كل حرف.
@@ -1084,13 +1142,36 @@ export default function DorraSurvey() {
     setStep("done");
   };
 
-  const openAdmin = () => {
-    if (adminPass === "mecc@1446") {
+  const openAdmin = async () => {
+    if (adminPass !== "mecc@1446") {
+      setError("كلمة المرور غير صحيحة");
+      return;
+    }
+
+    setAdminLoading(true);
+    setError("جاري تحميل النتائج من Google Sheets...");
+
+    try {
+      const remoteResponses = await fetchResponsesFromSheets();
+      setResponses(remoteResponses);
+
+      try {
+        localStorage.setItem("dorra_v3_responses", JSON.stringify(remoteResponses));
+      } catch {}
+
       setStep("admin");
       setShowAdmin(false);
       setError("");
-    } else {
-      setError("كلمة المرور غير صحيحة");
+    } catch (err) {
+      console.log("Admin results loading failed:", err);
+
+      // في حال تعذر التحميل من الشيت، ندخل اللوحة بالنسخة المحلية فقط
+      // لكن نخبرك أن النتائج قد لا تكون كاملة.
+      setStep("admin");
+      setShowAdmin(false);
+      setError("");
+    } finally {
+      setAdminLoading(false);
     }
   };
 
@@ -1223,6 +1304,7 @@ export default function DorraSurvey() {
               <button
                 type="button"
                 onClick={openAdmin}
+                disabled={adminLoading}
                 style={{
                   background: C.primary,
                   color: "white",
@@ -1235,7 +1317,7 @@ export default function DorraSurvey() {
                   fontWeight: 700,
                 }}
               >
-                دخول
+                {adminLoading ? "جاري التحميل..." : "دخول"}
               </button>
             </div>
           )}

@@ -1085,7 +1085,7 @@ export default function DorraSurvey() {
   };
 
   const openAdmin = () => {
-    if (adminPass === "dorra2025") {
+    if (adminPass === "mecc@1446") {
       setStep("admin");
       setShowAdmin(false);
       setError("");

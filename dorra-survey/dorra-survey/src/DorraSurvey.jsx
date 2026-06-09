@@ -295,8 +295,7 @@ function Option({ label, selected, onClick, shape }) {
   );
 }
 
-function QuestionCard({ q, answer, onChange, qIndex, total }) {
-  const inputRef = useRef(null);
+function QuestionCard({ q, answer, onChange, onTextDraft, qIndex, total }) {
 
   const toggle = (opt) => {
     if (q.type === "single") { onChange(opt); return; }
@@ -343,11 +342,10 @@ function QuestionCard({ q, answer, onChange, qIndex, total }) {
 
       {q.type === "textarea" ? (
         <textarea
-          ref={inputRef}
           key={q.id}
           defaultValue={answer || ""}
+          onChange={e => onTextDraft(q.id, e.target.value)}
           onBlur={e => onChange(e.target.value)}
-          onChange={e => onChange(e.target.value)}
           placeholder={q.placeholder}
           rows={5}
           style={{ ...inputStyle, resize:"vertical", lineHeight:1.8 }}
@@ -355,12 +353,11 @@ function QuestionCard({ q, answer, onChange, qIndex, total }) {
         />
       ) : q.type === "text" ? (
         <input
-          ref={inputRef}
           key={q.id}
           type="text"
           defaultValue={answer || ""}
+          onChange={e => onTextDraft(q.id, e.target.value)}
           onBlur={e => onChange(e.target.value)}
-          onChange={e => onChange(e.target.value)}
           placeholder={q.placeholder}
           style={inputStyle}
           onFocus={e => e.target.style.borderColor = C.primary}
@@ -602,6 +599,7 @@ export default function DorraSurvey() {
   const [adminPass, setAdminPass] = useState("");
   const [showAdmin, setShowAdmin] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const textDraftsRef = useRef({});
 
   useEffect(() => {
     try {
@@ -617,6 +615,10 @@ export default function DorraSurvey() {
   const handleAnswer = (val) => {
     setAnswers(prev => ({ ...prev, [q.id]: val }));
     setError("");
+  };
+
+  const handleTextDraft = (qid, val) => {
+    textDraftsRef.current[qid] = val;
   };
 
   const next = () => {
@@ -636,7 +638,7 @@ export default function DorraSurvey() {
 
   const submit = async () => {
     setSubmitting(true);
-    const entry = { ...answers, timestamp: new Date().toISOString() };
+    const entry = { ...answers, ...textDraftsRef.current, timestamp: new Date().toISOString() };
     const updated = [...responses, entry];
     setResponses(updated);
     try {
@@ -736,6 +738,7 @@ export default function DorraSurvey() {
       <QuestionCard
         q={q} answer={answers[q.id]}
         onChange={handleAnswer}
+        onTextDraft={handleTextDraft}
         qIndex={current} total={total}
       />
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // ═══════════════════════════════════════════
 // COLORS — Rose/Pink palette from logo
@@ -24,12 +24,17 @@ const SHEET_URL = "https://script.google.com/macros/s/AKfycbwbqpDWm2tvn_M0Si4LVA
 
 async function sendToSheets(data) {
   try {
-    const form = new FormData();
-    form.append("data", JSON.stringify(data));
+    const body = new URLSearchParams({
+      data: JSON.stringify(data)
+    });
+
     await fetch(SHEET_URL, {
       method: "POST",
       mode: "no-cors",
-      body: form
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+      },
+      body
     });
   } catch (e) {
     console.log("Sheet sync failed:", e);
@@ -540,6 +545,52 @@ function AdminPanel({ responses, onClose }) {
 }
 
 // ═══════════════════════════════════════════
+// SHARED LAYOUT
+// ═══════════════════════════════════════════
+const Layout = ({ children, noPad }) => (
+  <div style={{
+    minHeight:"100vh", background:C.cream,
+    fontFamily:"Tajawal, sans-serif", direction:"rtl",
+    display:"flex", flexDirection:"column", alignItems:"center"
+  }}>
+    {/* Header */}
+    <div style={{
+      width:"100%",
+      background:`linear-gradient(135deg, ${C.dark} 0%, ${C.primary} 60%, ${C.accent} 100%)`,
+      padding:"26px 24px 20px", textAlign:"center",
+      boxShadow:"0 4px 20px rgba(139,74,74,0.25)"
+    }}>
+      <div style={{ fontSize:28, fontWeight:800, color:"white", letterSpacing:3, textShadow:"0 2px 8px rgba(0,0,0,0.2)" }}>جمعية دُرَّة</div>
+      <div style={{ fontSize:12, color:"rgba(255,255,255,0.8)", marginTop:4, letterSpacing:1 }}>مجتمع نسائي ثقافي — أبوظبي، الإمارات العربية المتحدة</div>
+    </div>
+    <div style={{
+      width:"100%", maxWidth:540,
+      padding: noPad ? 0 : "28px 20px 60px",
+      flex:1
+    }}>
+      {children}
+    </div>
+    {/* Footer */}
+    <div style={{
+      width:"100%", textAlign:"center",
+      padding:"18px 24px",
+      borderTop:`1px solid ${C.mid}`,
+      background:C.white
+    }}>
+      <div style={{ fontSize:12, color:C.gray, lineHeight:1.9 }}>
+        © {new Date().getFullYear()} جمعية دُرَّة للمشاريع الثقافية والتربوية
+        <br/>
+        <span style={{ fontSize:11, color:C.mid }}>
+          جميع الحقوق محفوظة · أبوظبي، دولة الإمارات العربية المتحدة
+          <br/>
+          البيانات المُدخلة سرية وتُستخدم لأغراض بحثية وتطويرية داخلية فقط
+        </span>
+      </div>
+    </div>
+  </div>
+);
+
+// ═══════════════════════════════════════════
 // MAIN APP
 // ═══════════════════════════════════════════
 export default function DorraSurvey() {
@@ -601,49 +652,7 @@ export default function DorraSurvey() {
     else setError("كلمة المرور غير صحيحة");
   };
 
-  // ── SHARED LAYOUT ──
-  const Layout = ({ children, noPad }) => (
-    <div style={{
-      minHeight:"100vh", background:C.cream,
-      fontFamily:"Tajawal, sans-serif", direction:"rtl",
-      display:"flex", flexDirection:"column", alignItems:"center"
-    }}>
-      {/* Header */}
-      <div style={{
-        width:"100%",
-        background:`linear-gradient(135deg, ${C.dark} 0%, ${C.primary} 60%, ${C.accent} 100%)`,
-        padding:"26px 24px 20px", textAlign:"center",
-        boxShadow:"0 4px 20px rgba(139,74,74,0.25)"
-      }}>
-        <div style={{ fontSize:28, fontWeight:800, color:"white", letterSpacing:3, textShadow:"0 2px 8px rgba(0,0,0,0.2)" }}>جمعية دُرَّة</div>
-        <div style={{ fontSize:12, color:"rgba(255,255,255,0.8)", marginTop:4, letterSpacing:1 }}>مجتمع نسائي ثقافي — أبوظبي، الإمارات العربية المتحدة</div>
-      </div>
-      <div style={{
-        width:"100%", maxWidth:540,
-        padding: noPad ? 0 : "28px 20px 60px",
-        flex:1
-      }}>
-        {children}
-      </div>
-      {/* Footer */}
-      <div style={{
-        width:"100%", textAlign:"center",
-        padding:"18px 24px",
-        borderTop:`1px solid ${C.mid}`,
-        background:C.white
-      }}>
-        <div style={{ fontSize:12, color:C.gray, lineHeight:1.9 }}>
-          © {new Date().getFullYear()} جمعية دُرَّة للمشاريع الثقافية والتربوية
-          <br/>
-          <span style={{ fontSize:11, color:C.mid }}>
-            جميع الحقوق محفوظة · أبوظبي، دولة الإمارات العربية المتحدة
-            <br/>
-            البيانات المُدخلة سرية وتُستخدم لأغراض بحثية وتطويرية داخلية فقط
-          </span>
-        </div>
-      </div>
-    </div>
-  );
+
 
   // ── INTRO ──
   if (step === "intro") return (

@@ -529,7 +529,7 @@ const QUESTIONS = [
       },
       {
         id: "q13",
-        label: "رقم واتساب",
+        label: "رقم الواتساب",
         placeholder: "05XXXXXXXX",
         inputMode: "numeric",
       },

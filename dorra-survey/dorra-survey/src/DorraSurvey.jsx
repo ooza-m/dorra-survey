@@ -517,14 +517,14 @@ const QUESTIONS = [
     id: "q12",
     section: 4,
     text: "بيانات التواصل",
-    hint: "إن كنتِ تودين أن تكوني جزء من دُرَّة",
+    hint: "اختياري — اكتبي ما يناسبكِ فقط",
     type: "contact",
     required: false,
     fields: [
       {
         id: "q12",
         label: "الاسم",
-        placeholder: "اسمكِ...",
+        placeholder: "اسمكِ الثلاثي...",
         inputMode: "text",
       },
       {
@@ -1595,7 +1595,7 @@ export default function DorraSurvey() {
           <span style={{ fontSize: 30, flexShrink: 0 }}>⏱️</span>
           <div>
             <div style={{ fontWeight: 700, fontSize: 15, color: C.text }}>
-              4 دقائق فقط
+              5 دقائق فقط
             </div>
             <div style={{ fontSize: 13, color: C.gray, marginTop: 2 }}>
               {QUESTIONS.length} سؤالاً — وكل إجابة تُشكّل معنا دُرَّة
@@ -1792,7 +1792,7 @@ export default function DorraSurvey() {
             {submitting
               ? "جاري الإرسال..."
               : current < total - 1
-              ? "← التالي"
+              ? "التالي ←"
               : "إرسال الاستبيان 🌸"}
           </button>
         </div>

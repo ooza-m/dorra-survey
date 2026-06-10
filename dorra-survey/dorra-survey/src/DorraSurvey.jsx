@@ -517,7 +517,7 @@ const QUESTIONS = [
     id: "q12",
     section: 4,
     text: "بيانات التواصل",
-    hint: "اختياري — إن كنتِ تودين أن تكوني جزء من دُرَّة",
+    hint: "إن كنتِ تودين أن تكوني جزء من دُرَّة",
     type: "contact",
     required: false,
     fields: [

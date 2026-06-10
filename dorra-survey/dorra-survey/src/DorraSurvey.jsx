@@ -1595,7 +1595,7 @@ export default function DorraSurvey() {
           <span style={{ fontSize: 30, flexShrink: 0 }}>⏱️</span>
           <div>
             <div style={{ fontWeight: 700, fontSize: 15, color: C.text }}>
-              5 دقائق فقط
+              4 دقائق فقط
             </div>
             <div style={{ fontSize: 13, color: C.gray, marginTop: 2 }}>
               {QUESTIONS.length} سؤالاً — وكل إجابة تُشكّل معنا دُرَّة

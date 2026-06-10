@@ -486,7 +486,7 @@ const QUESTIONS = [
       "عن بُعد (أونلاين)",
       "كلاهما يناسبني",
       "يعتمد على الموضوع والوقت",
-      "لا يناسبني أيٌّ منها حالياً",
+      "لا يناسبني أيٌّ منها حالياً",
     ],
   },
   {
@@ -516,26 +516,30 @@ const QUESTIONS = [
   {
     id: "q12",
     section: 4,
-    text: "إذا أردتِ أن نتواصل معكِ — اتركي اسمكِ هنا 🤍",
-    type: "text",
+    text: "بيانات التواصل",
+    hint: "اختياري — اكتبي ما يناسبكِ فقط",
+    type: "contact",
     required: false,
-    placeholder: "اسمكِ...",
-  },
-  {
-    id: "q13",
-    section: 4,
-    text: "رقم واتساب",
-    type: "text",
-    required: false,
-    placeholder: "05XXXXXXXX",
-  },
-  {
-    id: "q14",
-    section: 4,
-    text: "البريد الإلكتروني",
-    type: "text",
-    required: false,
-    placeholder: "example@email.com",
+    fields: [
+      {
+        id: "q12",
+        label: "الاسم",
+        placeholder: "اسمكِ...",
+        inputMode: "text",
+      },
+      {
+        id: "q13",
+        label: "رقم واتساب",
+        placeholder: "05XXXXXXXX",
+        inputMode: "numeric",
+      },
+      {
+        id: "q14",
+        label: "البريد الإلكتروني",
+        placeholder: "example@email.com",
+        inputMode: "email",
+      },
+    ],
   },
 ];
 
@@ -853,7 +857,54 @@ function QuestionCard({
         </p>
       )}
 
-      {q.type === "select" ? (
+      {q.type === "contact" ? (
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          {q.fields.map((field) => (
+            <label key={field.id} style={{ display: "block" }}>
+              <div
+                style={{
+                  fontSize: 13,
+                  color: C.dark,
+                  fontWeight: 700,
+                  marginBottom: 6,
+                }}
+              >
+                {field.label}
+              </div>
+
+              <input
+                type={field.inputMode === "email" ? "email" : "text"}
+                inputMode={field.inputMode}
+                pattern={field.id === "q13" ? "[0-9]*" : undefined}
+                maxLength={field.id === "q13" ? 20 : undefined}
+                defaultValue={currentTextValue?.[field.id] || ""}
+                onInput={(e) => {
+                  let value = e.currentTarget.value;
+
+                  if (field.id === "q13") {
+                    value = value.replace(/\D/g, "");
+                    e.currentTarget.value = value;
+                  }
+
+                  onTextDraft(field.id, value);
+                }}
+                onBlur={(e) => {
+                  onTextDraft(field.id, e.currentTarget.value);
+                  e.currentTarget.style.borderColor = C.mid;
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = C.primary;
+                }}
+                placeholder={field.placeholder}
+                style={{
+                  ...inputStyle,
+                  background: C.white,
+                }}
+              />
+            </label>
+          ))}
+        </div>
+      ) : q.type === "select" ? (
         <select
           value={answer || ""}
           onChange={(e) => onAnswer(q.id, e.currentTarget.value)}
@@ -977,13 +1028,59 @@ function AdminPanel({ responses, onClose }) {
   const exportCSV = () => {
     if (responses.length === 0) return;
 
-    const headers = QUESTIONS.map((q) => q.text).concat(["الوقت"]);
+    const headers = [
+      "الجنس",
+      "الجنسية",
+      "الإمارة",
+      "العمر",
+      "الوضع الحالي",
+      "الحالة الاجتماعية",
+      "أبناء",
+      "علاقة بالقراءة",
+      "الموضوعات",
+      "المحتوى العربي",
+      "البرامج المطلوبة",
+      "الاستشارات الأسرية",
+      "الاستشارات الثقافية",
+      "قابلية الدفع",
+      "طريقة المشاركة",
+      "الانضمام",
+      "ملاحظات",
+      "الاسم",
+      "واتساب",
+      "البريد",
+      "الوقت",
+    ];
+
+    const fieldIds = [
+      "q1",
+      "q1b",
+      "q1c",
+      "q2",
+      "q3",
+      "q3b",
+      "q3c",
+      "q4",
+      "q5",
+      "q6",
+      "q7",
+      "q8",
+      "q8b",
+      "q9",
+      "q10",
+      "q11",
+      "q11b",
+      "q12",
+      "q13",
+      "q14",
+      "timestamp",
+    ];
 
     const rows = responses.map((r) =>
-      QUESTIONS.map((q) => {
-        const v = r[q.id];
+      fieldIds.map((id) => {
+        const v = r[id];
         return Array.isArray(v) ? v.join(" | ") : v || "";
-      }).concat([r.timestamp || ""])
+      })
     );
 
     const csv = [headers, ...rows]
@@ -1322,6 +1419,27 @@ export default function DorraSurvey() {
       return "يرجى الإجابة قبل المتابعة 🌸";
     }
 
+    if (q.type === "contact") {
+      const phone = answersRef.current.q13 ?? answers.q13;
+      const email = answersRef.current.q14 ?? answers.q14;
+
+      if (!isEmptyAnswer(phone)) {
+        const phoneText = String(phone).trim();
+
+        if (!/^\d+$/.test(phoneText)) {
+          return "رقم الواتساب يجب أن يحتوي على أرقام فقط";
+        }
+
+        if (phoneText.length < 7) {
+          return "رقم الواتساب يجب ألا يقل عن 7 أرقام";
+        }
+      }
+
+      if (!isEmptyAnswer(email) && !isValidEmail(email)) {
+        return "يرجى كتابة البريد الإلكتروني بصيغة صحيحة";
+      }
+    }
+
     if (q.id === "q13" && !isEmptyAnswer(ans)) {
       const phone = String(ans).trim();
 
@@ -1594,7 +1712,15 @@ export default function DorraSurvey() {
         <QuestionCard
           q={q}
           answer={answers[q.id]}
-          currentTextValue={answersRef.current[q.id] ?? answers[q.id]}
+          currentTextValue={
+            q.type === "contact"
+              ? {
+                  q12: answersRef.current.q12 ?? answers.q12,
+                  q13: answersRef.current.q13 ?? answers.q13,
+                  q14: answersRef.current.q14 ?? answers.q14,
+                }
+              : answersRef.current[q.id] ?? answers[q.id]
+          }
           onAnswer={handleAnswer}
           onTextDraft={handleTextDraft}
           qIndex={current}

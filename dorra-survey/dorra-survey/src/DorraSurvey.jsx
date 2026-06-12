@@ -666,7 +666,6 @@ function ProgressBar({ current, total }) {
             height: "100%",
             width: `${pct}%`,
             background: `linear-gradient(90deg, ${C.dark}, ${C.primary})`,
-            borderRadius: 10,
             transition: "width 0.4s cubic-bezier(.4,0,.2,1)",
           }}
         />
@@ -1060,7 +1059,6 @@ function AdminPanel({ responses, onClose }) {
             height: "100%",
             width: `${pct(n)}%`,
             background: `linear-gradient(90deg,${C.dark},${C.primary})`,
-            borderRadius: 10,
           }}
         />
       </div>
@@ -1223,8 +1221,7 @@ function AdminPanel({ responses, onClose }) {
             onClick={onClose}
             style={{
               background: C.soft,
-              border: `1px solid ${C.mid}`,
-              borderRadius: 20,
+                borderRadius: 20,
               padding: "9px 20px",
               cursor: "pointer",
               color: C.dark,
@@ -1276,11 +1273,9 @@ function AdminPanel({ responses, onClose }) {
           {contacts.length > 0 && (
             <div
               style={{
-                background: C.light,
-                borderRadius: 16,
+                    borderRadius: 16,
                 padding: "20px 24px",
-                border: `1px solid ${C.mid}`,
-                marginTop: 8,
+                    marginTop: 8,
               }}
             >
               <h3
@@ -1309,8 +1304,7 @@ function AdminPanel({ responses, onClose }) {
                           <th
                             key={h}
                             style={{
-                              padding: "8px 12px",
-                              textAlign: "right",
+                                                textAlign: "right",
                               color: C.dark,
                               fontWeight: 700,
                               whiteSpace: "nowrap",
@@ -1382,8 +1376,7 @@ function AdminPanel({ responses, onClose }) {
                     key={i}
                     style={{
                       background: C.soft,
-                      borderRadius: 10,
-                      padding: "12px 16px",
+                                padding: "12px 16px",
                       marginBottom: 10,
                       fontSize: 14,
                       color: C.text,
@@ -1738,8 +1731,7 @@ export default function DorraSurvey() {
                 style={{
                   padding: "8px 14px",
                   borderRadius: 8,
-                  border: `1px solid ${C.mid}`,
-                  fontFamily: "Tajawal, Arial, sans-serif",
+                        fontFamily: "Tajawal, Arial, sans-serif",
                   fontSize: 14,
                   direction: "ltr",
                   outline: "none",
@@ -1813,9 +1805,7 @@ export default function DorraSurvey() {
             style={{
               marginTop: 12,
               padding: "10px 16px",
-              borderRadius: 10,
-              background: C.light,
-              color: C.dark,
+                  color: C.dark,
               border: `1.5px solid ${C.mid}`,
               fontSize: 14,
               fontWeight: 700,
@@ -1930,8 +1920,7 @@ export default function DorraSurvey() {
 
           <div
             style={{
-              background: C.light,
-              borderRadius: 16,
+                borderRadius: 16,
               padding: "20px 24px",
               border: `1.5px solid ${C.mid}`,
               maxWidth: 360,

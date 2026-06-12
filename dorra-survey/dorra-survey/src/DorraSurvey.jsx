@@ -1805,10 +1805,11 @@ export default function DorraSurvey() {
             style={{
               marginTop: 12,
               padding: "10px 16px",
-                  color: C.dark,
-              border: `1.5px solid ${C.mid}`,
+              borderRadius: 10,
+              background: "#FFF0F0",
+              color: "#C0392B",
               fontSize: 14,
-              fontWeight: 700,
+              fontWeight: 600,
             }}
           >
             {error}

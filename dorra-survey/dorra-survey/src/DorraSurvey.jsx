@@ -854,10 +854,6 @@ function QuestionCard({
             marginBottom: 16,
             fontWeight: 700,
             lineHeight: 1.8,
-            background: C.light,
-            border: `1px solid ${C.mid}`,
-            borderRadius: 10,
-            padding: "8px 12px",
           }}
         >
           {q.hint}

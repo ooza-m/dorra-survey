@@ -340,7 +340,7 @@ const QUESTIONS = [
   {
     id: "q3",
     section: 1,
-    text: "ما الذي يصفكِ أكثر الآن؟",
+    text: "ما الأقرب لوضعكِ حالياً؟",
     hint: "يمكن اختيار أكثر من إجابة",
     type: "multi",
     required: true,
@@ -364,6 +364,7 @@ const QUESTIONS = [
   },
   {
     id: "q3c",
+    hidden: true,
     section: 1,
     text: "هل لديكِ أبناء؟",
     type: "single",
@@ -375,20 +376,20 @@ const QUESTIONS = [
     section: 2,
     sectionTitle: "علاقتكِ بالثقافة والقراءة",
     sectionIcon: "📚",
-    text: "كيف تصفين علاقتكِ بالقراءة؟",
+    text: "هل تحبين القراءة؟",
     type: "single",
     required: true,
     options: [
-      "أقرأ بانتظام وأعشق الكتب",
-      "أقرأ أحياناً لكن أودّ أن أقرأ أكثر",
-      "أجد صعوبة في إيجاد كتب تشدّني",
-      "القراءة لم تكن عادتي حتى الآن",
+      "نعم، أقرأ كثيراً",
+      "أقرأ أحياناً",
+      "أحب القراءة لكن لا أجد ما يناسبني",
+      "لا أقرأ كثيراً حالياً",
     ],
   },
   {
     id: "q5",
     section: 2,
-    text: "ما الموضوعات التي تشدّكِ أكثر؟",
+    text: "ما الموضوعات التي تهمكِ أكثر؟",
     hint: "اختاري حتى 3 موضوعات",
     type: "multi",
     maxSelect: 3,
@@ -397,22 +398,21 @@ const QUESTIONS = [
       "التطوير الشخصي والعلاقات",
       "التربية والأسرة",
       "الأدب والروايات العربية",
-      "التراث الإماراتي والهوية",
       "الثقافة العامة والفكر",
-      "الكتب المترجمة عن لغات أخرى",
+      "الكتب والمحتوى المترجم",
     ],
   },
   {
     id: "q6",
     section: 2,
-    text: "باللغة العربية تحديداً — كيف تجدين المحتوى الثقافي النوعي المتاح لكِ؟",
+    text: "هل تجدين المحتوى الثقافي العربي المتنوع متاحًا لكِ؟",
     type: "single",
     required: true,
     options: [
-      "وفير ومتنوع وأجد ما يناسبني",
-      "موجود لكن أتمنى أن يكون أعمق وأجود",
-      "قليل جداً في مجالات أهتم بها",
-      "أجد نفسي أتجه للمحتوى الإنجليزي لقلة الخيارات",
+      "نعم، أجد ما يناسبني",
+      "أجد بعض المحتوى، لكن أحتاج ما هو أفضل",
+      "قليل، ولا أجد ما أحتاجه بسهولة",
+      "غالباً أبحث عن محتوى باللغة الإنجليزية",
     ],
   },
   {
@@ -427,24 +427,26 @@ const QUESTIONS = [
     required: true,
     options: [
       "صالون قرائي شهري (نقاش كتاب مع مجموعة)",
-      "ورش ثقافية ومهارية (تفكير نقدي، كتابة إبداعية، …)",
+      "ورش ثقافية في القراءة والكتابة والتفكير",
       "استشارات تربوية وأسرية",
       "استشارات ثقافية وفكرية",
       "ملتقيات ثقافية في (مدارس، جامعات، جهات عمل)",
-      "حلقات قرائية فردية أو ثنائية",
+      "حلقات قرائية فردية وثنائية",
       "إنتاج كتب عربية نوعية",
     ],
   },
   {
     id: "q8",
     section: 3,
-    text: "هل سبق أن بحثتِ عن استشارة تربوية أو أسرية ولم تجدي ما يناسبكِ؟",
+    text: "هل سبق أن احتجتِ استشارةً تربوية أو أسرية؟",
     type: "single",
     required: true,
     options: [
-      "نعم، وهذا احتياج حقيقي عندي",
-      "لم أحتج حتى الآن لكن يهمني وجود هذا",
-      "لا، لديّ مصادر كافية حالياً",
+      "نعم، لكن لم تكن بالجودة المطلوبة",
+      "نعم، لكن لم أجد خيارات مناسبة",
+      "نعم، ووجدت استشارة جيدة",
+      "لا أحتاجها حالياً، لكن يهمني وجودها",
+      "لا أحتاجها حالياً، ولا يهمني وجودها",
     ],
   },
   {
@@ -463,30 +465,30 @@ const QUESTIONS = [
   {
     id: "q9",
     section: 3,
-    text: "إذا قدّمت دُرَّة برنامجاً ثقافياً نوعياً يضيف لكِ فعلاً — ما الذي يناسبكِ؟",
-    hint: "إجابتكِ تساعدنا في تصميم برامج تناسب الجميع",
-    type: "single",
+    text: "إذا قدّمت دُرَّة برنامجاً ثقافياً يوافق اهتماماتكِ — ما الذي يناسبكِ؟",
+    hint: "يمكنكِ اختيار أكثر من إجابة",
+    type: "multi",
     required: true,
     options: [
-      "أشارك في البرامج المجانية فقط",
+      "أشارك في البرامج المجانية",
       "مستعدة للدفع حتى 100 درهم للبرنامج الواحد",
       "مستعدة للدفع بين 100 – 500 درهم",
       "مستعدة للدفع بين 500 – 1000 درهم",
-      "لا يهمني المبلغ إن كان البرنامج نوعياً ويضيف قيمة حقيقية",
+      "لا يهمني المبلغ إذا كان البرنامج نافعاً فعلاً",
     ],
   },
   {
     id: "q10",
     section: 3,
-    text: "ما طريقة المشاركة التي تناسبكِ أكثر؟",
+    text: "كيف تفضلين المشاركة؟",
     type: "single",
     required: true,
     options: [
-      "حضورياً (أبوظبي)",
-      "عن بُعد (أونلاين)",
+      "حضورياً في أبوظبي",
+      "عن بُعد / أونلاين",
       "كلاهما يناسبني",
-      "يعتمد على الموضوع والوقت",
-      "لا يناسبني أيٌّ منها حالياً",
+      "حسب الموضوع والوقت",
+      "لا يناسبني أيٌّ منها حالياً",
     ],
   },
   {
@@ -498,9 +500,9 @@ const QUESTIONS = [
     type: "single",
     required: true,
     options: [
-      "نعم، أودّ التطوع والمساهمة",
-      "أودّ المتابعة والاستفادة من البرامج",
-      "كلاهما يعجبني",
+      "أود التطوع فقط",
+      "أود الاستفادة فقط",
+      "أود الاثنين معاً",
       "سأرى عندما تنطلقون",
     ],
   },
@@ -747,6 +749,7 @@ function Option({ label, selected, onClick, shape }) {
 function QuestionCard({
   q,
   answer,
+  allAnswers = {},
   currentTextValue,
   onAnswer,
   onTextDraft,
@@ -806,6 +809,10 @@ function QuestionCard({
 
     onAnswer(q.id, [...arr, opt]);
   };
+
+  const childrenQuestion = QUESTIONS.find((item) => item.id === "q3c");
+  const shouldShowChildrenQuestion =
+    q.id === "q3b" && ["متزوجة", "مطلقة", "أرملة"].includes(answer);
 
   return (
     <div style={{ direction: "rtl", fontFamily: "Tajawal, Arial, sans-serif" }}>
@@ -970,6 +977,40 @@ function QuestionCard({
               shape={q.type === "single" ? "circle" : "square"}
             />
           ))}
+        </div>
+      )}
+
+      {shouldShowChildrenQuestion && childrenQuestion && (
+        <div
+          style={{
+            marginTop: 22,
+            paddingTop: 20,
+            borderTop: `1.5px solid ${C.mid}`,
+          }}
+        >
+          <p
+            style={{
+              fontSize: 18,
+              fontWeight: 800,
+              color: C.text,
+              lineHeight: 1.65,
+              marginBottom: 14,
+            }}
+          >
+            {childrenQuestion.text}
+          </p>
+
+          <div style={{ marginTop: 8 }}>
+            {childrenQuestion.options.map((opt) => (
+              <Option
+                key={opt}
+                label={opt}
+                selected={allAnswers.q3c === opt}
+                onClick={() => onAnswer("q3c", opt)}
+                shape="circle"
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -1390,11 +1431,20 @@ export default function DorraSurvey() {
     } catch {}
   }, []);
 
-  const q = QUESTIONS[current];
-  const total = QUESTIONS.length;
+  const visibleQuestions = QUESTIONS.filter((item) => !item.hidden);
+  const q = visibleQuestions[current];
+  const total = visibleQuestions.length;
 
   const handleAnswer = (qid, val) => {
     answersRef.current[qid] = val;
+
+    if (qid === "q3b" && val === "عزباء") {
+      answersRef.current.q3c = "";
+      setAnswers((prev) => ({ ...prev, [qid]: val, q3c: "" }));
+      setError("");
+      return;
+    }
+
     setAnswers((prev) => ({ ...prev, [qid]: val }));
     setError("");
   };
@@ -1417,6 +1467,14 @@ export default function DorraSurvey() {
 
     if (q.required && isEmptyAnswer(ans)) {
       return "يرجى الإجابة قبل المتابعة 🌸";
+    }
+
+    if (
+      q.id === "q3b" &&
+      ["متزوجة", "مطلقة", "أرملة"].includes(ans) &&
+      isEmptyAnswer(answersRef.current.q3c ?? answers.q3c)
+    ) {
+      return "يرجى الإجابة عن سؤال الأبناء 🌸";
     }
 
     if (q.type === "contact") {
@@ -1562,21 +1620,46 @@ export default function DorraSurvey() {
             أخبرينا عنكِ
           </h1>
 
-          <p
+          <div
             style={{
-              fontSize: 15.5,
+              fontSize: 15.2,
               color: C.gray,
               lineHeight: 2,
-              maxWidth: 380,
+              maxWidth: 430,
               margin: "0 auto",
+              textAlign: "right",
+              background: C.white,
+              borderRadius: 16,
+              padding: "18px 20px",
+              border: `1.5px solid ${C.mid}`,
+              boxShadow: "0 2px 16px rgba(193,126,126,0.1)",
             }}
           >
-            نحن دُرَّة — جمعية ثقافية تربوية ناشئة في دولة
-            الإمارات العربية المتحدة. نؤمن أن المرأة التي تقرأ وتتعلم وتنتمي
-            لمجتمع ملهم تصنع فرقاً حقيقياً.
-            <br />
-            قبل أن ننطلق، أردنا أن نسمعكِ أنتِ.
-          </p>
+            <p style={{ margin: "0 0 12px" }}>
+              دُرَّة مساحة ثقافية تربوية ناشئة في دولة الإمارات العربية المتحدة،
+              وُلدت من الإيمان بأن الفتاة حين تجد من يسمعها، ويثري فكرها،
+              ويقوّي صلتها بالمعرفة والقيم والجمال، تصبح أقدر على صناعة أثرها
+              في نفسها وأسرتها ومجتمعها.
+            </p>
+
+            <p style={{ margin: "0 0 12px" }}>
+              نطمح في دُرَّة إلى بناء مجتمع نسائي واعٍ، يفتح للفتاة والمرأة
+              والأم أبواب القراءة، والاستشارة، والبرامج الثقافية التي تلامس
+              واقعها واحتياجها.
+            </p>
+
+            <p style={{ margin: "0 0 12px" }}>
+              قبل أن ننطلق، نود أن نسمعكِ أنتِ: ما الذي تحتاجينه؟ ما الذي
+              يشدّكِ؟ وما نوع البرامج التي تتمنين وجودها لكِ أو لابنتكِ أو لمن
+              حولكِ؟
+            </p>
+
+            <p style={{ margin: 0, color: C.dark, fontWeight: 700 }}>
+              إجابتكِ في هذا الاستبيان القصير ليست مجرد رأي، بل لبنة تساعدنا
+              على تشكيل دُرَّة بما يليق بالمرأة في الإمارات، وبما يصنع أثراً
+              أعمق بإذن الله.
+            </p>
+          </div>
         </div>
 
         <div
@@ -1598,7 +1681,7 @@ export default function DorraSurvey() {
               4 دقائق فقط
             </div>
             <div style={{ fontSize: 13, color: C.gray, marginTop: 2 }}>
-              {QUESTIONS.length} سؤالاً — وكل إجابة تُشكّل معنا دُرَّة
+              {total} سؤالاً — وكل إجابة تُشكّل معنا دُرَّة
             </div>
           </div>
         </div>
@@ -1712,6 +1795,7 @@ export default function DorraSurvey() {
         <QuestionCard
           q={q}
           answer={answers[q.id]}
+          allAnswers={answers}
           currentTextValue={
             q.type === "contact"
               ? {

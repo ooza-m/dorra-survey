@@ -420,7 +420,7 @@ const QUESTIONS = [
     section: 3,
     sectionTitle: "ما تحتاجينه",
     sectionIcon: "✨",
-    text: "ما البرامج والمشاريع الثقافية التي تودّين المشاركة فيها؟",
+    text: "ما البرامج التي تتمنين وجودها؟",
     hint: "اختاري حتى 3 خيارات",
     type: "multi",
     maxSelect: 3,
@@ -484,7 +484,7 @@ const QUESTIONS = [
     type: "single",
     required: true,
     options: [
-      "حضورياً في أبوظبي",
+      "حضوريًا (في أبوظبي)",
       "عن بُعد / أونلاين",
       "كلاهما يناسبني",
       "حسب الموضوع والوقت",
@@ -519,7 +519,7 @@ const QUESTIONS = [
     id: "q12",
     section: 4,
     text: "بيانات التواصل",
-    hint: "إن كنتِ تودين أن تكوني جزءّا من دُرَّة",
+    hint: "إن كنتِ تودين أن تكوني جزءًا من دُرَّة",
     type: "contact",
     required: false,
     fields: [
@@ -849,10 +849,15 @@ function QuestionCard({
       {q.hint && (
         <p
           style={{
-            fontSize: 13,
-            color: C.gray,
+            fontSize: 14.5,
+            color: C.dark,
             marginBottom: 16,
-            fontStyle: "italic",
+            fontWeight: 700,
+            lineHeight: 1.8,
+            background: C.light,
+            border: `1px solid ${C.mid}`,
+            borderRadius: 10,
+            padding: "8px 12px",
           }}
         >
           {q.hint}
@@ -1622,39 +1627,35 @@ export default function DorraSurvey() {
 
           <div
             style={{
-              fontSize: 15.2,
-              color: C.gray,
-              lineHeight: 2,
+              fontSize: 16.2,
+              color: C.text,
+              lineHeight: 2.05,
               maxWidth: 430,
               margin: "0 auto",
               textAlign: "right",
-              background: C.white,
-              borderRadius: 16,
-              padding: "18px 20px",
-              border: `1.5px solid ${C.mid}`,
-              boxShadow: "0 2px 16px rgba(193,126,126,0.1)",
+              fontWeight: 500,
             }}
           >
-            <p style={{ margin: "0 0 12px" }}>
+            <p style={{ margin: "0 0 13px" }}>
               دُرَّة مساحة ثقافية تربوية ناشئة في دولة الإمارات العربية المتحدة،
               وُلدت من الإيمان بأن الفتاة حين تجد من يسمعها، ويثري فكرها،
               ويقوّي صلتها بالمعرفة والقيم والجمال، تصبح أقدر على صناعة أثرها
               في نفسها وأسرتها ومجتمعها.
             </p>
 
-            <p style={{ margin: "0 0 12px" }}>
+            <p style={{ margin: "0 0 13px" }}>
               نطمح في دُرَّة إلى بناء مجتمع نسائي واعٍ، يفتح للفتاة والمرأة
               والأم أبواب القراءة، والاستشارة، والبرامج الثقافية التي تلامس
               واقعها واحتياجها.
             </p>
 
-            <p style={{ margin: "0 0 12px" }}>
+            <p style={{ margin: "0 0 13px" }}>
               قبل أن ننطلق، نود أن نسمعكِ أنتِ: ما الذي تحتاجينه؟ ما الذي
               يشدّكِ؟ وما نوع البرامج التي تتمنين وجودها لكِ أو لابنتكِ أو لمن
               حولكِ؟
             </p>
 
-            <p style={{ margin: 0, color: C.dark, fontWeight: 700 }}>
+            <p style={{ margin: 0, color: C.dark, fontWeight: 800 }}>
               إجابتكِ في هذا الاستبيان القصير ليست مجرد رأي، بل لبنة تساعدنا
               على تشكيل دُرَّة بما يليق بالمرأة في الإمارات، وبما يصنع أثراً
               أعمق بإذن الله.

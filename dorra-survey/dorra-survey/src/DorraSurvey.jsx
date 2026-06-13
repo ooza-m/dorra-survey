@@ -442,11 +442,10 @@ const QUESTIONS = [
     type: "single",
     required: true,
     options: [
-      "نعم، لكن لم تكن بالجودة المطلوبة",
-      "نعم، لكن لم أجد خيارات مناسبة",
+      "نعم، لكن لم تكن بالمستوى المطلوب",
       "نعم، ووجدت استشارة جيدة",
       "لا أحتاجها حالياً، لكن يهمني وجودها",
-      "لا أحتاجها حالياً، ولا يهمني وجودها",
+      "لا أحتاجها حاليًا",
     ],
   },
   {
@@ -1537,6 +1536,16 @@ export default function DorraSurvey() {
     }
   };
 
+  const restartSurvey = () => {
+    answersRef.current = {};
+    setAnswers({});
+    setCurrent(0);
+    setError("");
+    setShowAdmin(false);
+    setAdminPass("");
+    setStep("intro");
+  };
+
   const submit = async () => {
     setSubmitting(true);
 
@@ -1561,7 +1570,7 @@ export default function DorraSurvey() {
   };
 
   const openAdmin = async () => {
-    if (adminPass !== "mecc@1446") {
+    if (adminPass !== "dorra2025") {
       setError("كلمة المرور غير صحيحة");
       return;
     }
@@ -1678,7 +1687,11 @@ export default function DorraSurvey() {
 
         <button
           type="button"
-          onClick={() => setStep("survey")}
+          onClick={() => {
+            setError("");
+            setShowAdmin(false);
+            setStep("survey");
+          }}
           style={{
             width: "100%",
             padding: "15px",
@@ -1817,10 +1830,13 @@ export default function DorraSurvey() {
         )}
 
         <div style={{ display: "flex", gap: 10, marginTop: 24 }}>
-          {current > 0 && (
+          {current >= 0 && (
             <button
               type="button"
-              onClick={prev}
+              onClick={current === 0 ? () => {
+                setError("");
+                setStep("intro");
+              } : prev}
               style={{
                 flex: 1,
                 padding: "13px",
@@ -1942,6 +1958,24 @@ export default function DorraSurvey() {
               سيتم التواصل معكِ عند الانطلاق إن تركتِ بياناتكِ
             </div>
           </div>
+
+          <button
+            type="button"
+            onClick={restartSurvey}
+            style={{
+              marginTop: 32,
+              background: "none",
+              border: "none",
+              color: C.dark,
+              opacity: 0.72,
+              fontSize: 15,
+              fontWeight: 400,
+              cursor: "pointer",
+              fontFamily: "Tajawal, Arial, sans-serif",
+            }}
+          >
+            إرسال رد آخر
+          </button>
         </div>
       </Layout>
     );

@@ -389,7 +389,7 @@ const QUESTIONS = [
   {
     id: "q5",
     section: 2,
-    text: "ما الموضوعات التي تهمكِ أكثر؟",
+    text: "من بين الموضوعات التالية، أيها أقرب إلى اهتمامك؟",
     hint: "اختاري حتى 3 موضوعات",
     type: "multi",
     maxSelect: 3,
@@ -406,6 +406,7 @@ const QUESTIONS = [
     id: "q6",
     section: 2,
     text: "هل تجدين المحتوى الثقافي العربي المتنوع متاحًا لكِ؟",
+    hint: "المحتوى الثقافي: الكتب، المنشورات، المحتوى الرقمي، ...",
     type: "single",
     required: true,
     options: [
@@ -526,6 +527,261 @@ const QUESTIONS = [
         id: "q12",
         label: "الاسم",
         placeholder: "اسمكِ الثلاثي...",
+        inputMode: "text",
+      },
+      {
+        id: "q13",
+        label: "رقم الواتساب",
+        placeholder: "05XXXXXXXX",
+        inputMode: "numeric",
+      },
+      {
+        id: "q14",
+        label: "البريد الإلكتروني",
+        placeholder: "example@email.com",
+        inputMode: "email",
+      },
+    ],
+  },
+];
+
+const MALE_NOTICE = [
+  "دُرَّة مساحة ثقافية تربوية ناشئة، وُجهت في أصلها لفهم احتياج الفتاة والمرأة في دولة الإمارات، وبناء برامج تلامس واقعها، وتثري فكرها، وتساند أثرها في أسرتها ومجتمعها.",
+  "ومع ذلك، فإن رأيك محل تقدير إن كنت أبًا، أو زوجًا، أو أخًا، أو متخصصًا في التربية أو الثقافة أو العمل المجتمعي؛ وترى أهمية وجود مؤسسات تُعين المرأة، وتثري فكرها، وتدعم أثرها في أسرتها ومجتمعها.",
+  "نرجو أن تجيب عن الأسئلة التالية من زاوية ما تراه من احتياجات الفتيات والنساء من حولك، أو من واقع خبرتك واهتمامك.",
+  "مشاركتك تساعدنا على فهم أوسع، وبناء دُرَّة بصورة أنفع وأقرب للمجتمع.",
+];
+
+const MALE_QUESTIONS = [
+  {
+    id: "q1b",
+    section: 1,
+    sectionTitle: "رؤيتك واهتمامك",
+    sectionIcon: "👤",
+    text: "الجنسية",
+    type: "select",
+    required: true,
+    placeholder: "اختر الجنسية",
+    options: NATIONALITIES,
+  },
+  {
+    id: "q1c",
+    section: 1,
+    text: "أين تقيم حالياً؟",
+    type: "select",
+    required: true,
+    placeholder: "اختر مكان الإقامة",
+    options: [
+      "أبوظبي",
+      "دبي",
+      "الشارقة",
+      "عجمان",
+      "أم القيوين",
+      "رأس الخيمة",
+      "الفجيرة",
+      "خارج دولة الإمارات العربية المتحدة",
+    ],
+  },
+  {
+    id: "q2",
+    section: 1,
+    text: "إلى أي فئة عمرية تنتمي؟",
+    type: "single",
+    required: true,
+    options: ["أقل من 25 سنة", "25 – 40 سنة", "أكبر من 40 سنة"],
+  },
+  {
+    id: "q3",
+    section: 1,
+    text: "ما الأقرب لدورك أو صلتك بهذا الموضوع؟",
+    hint: "يمكنك اختيار أكثر من إجابة",
+    type: "multi_other",
+    required: true,
+    otherOption: "غير ذلك",
+    otherKey: "q3_other",
+    otherPlaceholder: "اكتب صلتك بالموضوع...",
+    options: [
+      "أب",
+      "زوج",
+      "أخ / ابن",
+      "تربوي أو معلم",
+      "مختص في الأسرة أو الاستشارات",
+      "مهتم بالثقافة والعمل المجتمعي",
+      "غير ذلك",
+    ],
+  },
+  {
+    id: "q3b",
+    section: 1,
+    text: "من الفئات التي ترى أنها قد تستفيد أكثر من برامج دُرَّة؟",
+    hint: "يمكنك اختيار أكثر من إجابة",
+    type: "multi",
+    required: true,
+    options: [
+      "الفتيات في سن الدراسة",
+      "طالبات الجامعة",
+      "الشابات في بداية حياتهن",
+      "الأمهات",
+      "ربات البيوت",
+      "الموظفات",
+    ],
+  },
+  {
+    id: "q4",
+    section: 2,
+    sectionTitle: "القراءة والثقافة",
+    sectionIcon: "📚",
+    text: "كيف ترى علاقة الفتيات والنساء من حولك بالقراءة والثقافة؟",
+    type: "single",
+    required: true,
+    options: [
+      "لديهن اهتمام واضح بالقراءة والثقافة",
+      "لديهن اهتمام، لكنه يحتاج تشجيعًا وتنظيمًا",
+      "الاهتمام موجود عند بعضهن فقط",
+      "أرى أن القراءة والثقافة ليستا حاضرتين بما يكفي",
+    ],
+  },
+  {
+    id: "q5",
+    section: 2,
+    text: "ما الموضوعات التي ترى أنها أنفع للفتيات والنساء؟",
+    hint: "اختر حتى موضوعين",
+    type: "multi",
+    maxSelect: 2,
+    required: true,
+    options: [
+      "تطوير الذات والعلاقات",
+      "التربية والأسرة",
+      "الأدب والروايات العربية",
+      "الثقافة العامة والفكر",
+      "الكتب والمحتوى المترجم",
+    ],
+  },
+  {
+    id: "q6",
+    section: 2,
+    text: "هل ترى أن المحتوى الثقافي العربي المتنوع متاح للفتاة والمرأة بصورة كافية؟",
+    hint: "المحتوى الثقافي: الكتب، المنشورات، المحتوى الرقمي، ...",
+    type: "single",
+    required: true,
+    options: [
+      "نعم، متاح بصورة جيدة",
+      "متاح، لكنه يحتاج جودة وعمقًا أكبر",
+      "قليل، ولا يصل إليهن بسهولة",
+      "كثير منهن يتجهن للمحتوى الأجنبي لقلة البدائل المناسبة",
+    ],
+  },
+  {
+    id: "q7",
+    section: 3,
+    sectionTitle: "ما تراه نافعًا",
+    sectionIcon: "✨",
+    text: "ما البرامج التي ترى أن وجودها سيكون نافعًا للفتاة والمرأة؟",
+    hint: "اختر حتى 3 خيارات",
+    type: "multi",
+    maxSelect: 3,
+    required: true,
+    options: [
+      "لقاءات شهرية لمناقشة الكتب",
+      "ورش ثقافية في القراءة والكتابة والتفكير",
+      "استشارات تربوية وأسرية",
+      "استشارات ثقافية وفكرية",
+      "ملتقيات ثقافية في المدارس أو الجامعات أو جهات العمل",
+      "حلقات قرائية فردية وثنائية",
+      "إنتاج كتب عربية نوعية",
+    ],
+  },
+  {
+    id: "q8",
+    section: 3,
+    text: "من واقع ما تراه، هل هناك حاجة إلى استشارات تربوية أو أسرية موجّهة للمرأة والأسرة؟",
+    type: "single",
+    required: true,
+    options: [
+      "نعم، والحاجة واضحة",
+      "نعم، لكن الخيارات المتاحة ليست بالمستوى المطلوب",
+      "توجد خيارات جيدة، لكنها لا تصل للجميع",
+      "لا أرى حاجة كبيرة حاليًا",
+      "لست متأكدًا",
+    ],
+  },
+  {
+    id: "q8b",
+    section: 3,
+    text: "هل ترى أن الفتيات والنساء قد يستفدن من مساحة آمنة لمناقشة الكتب والأفكار مع متخصصات؟",
+    type: "single",
+    required: true,
+    options: [
+      "نعم، أرى أن ذلك مهم جدًا",
+      "ربما، لم أفكر في ذلك من قبل",
+      "أرى أن لديهن بدائل كافية حاليًا",
+    ],
+  },
+  {
+    id: "q9",
+    section: 3,
+    text: "إذا قدّمت دُرَّة برنامجًا ثقافيًا نافعًا للفتاة أو المرأة — ما الذي تراه مناسبًا؟",
+    hint: "يمكنك اختيار أكثر من إجابة",
+    type: "multi",
+    required: true,
+    options: [
+      "أفضّل أن تكون البرامج مجانية",
+      "أرى أن الرسوم البسيطة مناسبة حتى 100 درهم",
+      "أرى أن 100 – 500 درهم مناسب للبرامج النوعية",
+      "أرى أن 500 – 1000 درهم مناسب للبرامج المتخصصة",
+      "لا يهمني المبلغ إذا كان البرنامج نافعًا فعلاً",
+    ],
+  },
+  {
+    id: "q10",
+    section: 3,
+    text: "ما الطريقة التي ترى أنها أنسب لمشاركة الفتيات والنساء في هذه البرامج؟",
+    type: "single",
+    required: true,
+    options: [
+      "حضوريًا (في أبوظبي)",
+      "عن بُعد / أونلاين",
+      "كلاهما مناسب",
+      "حسب الموضوع والوقت",
+      "لا يناسبهن أيٌّ منها حاليًا",
+    ],
+  },
+  {
+    id: "q11",
+    section: 4,
+    sectionTitle: "دُرَّة والدعم المجتمعي",
+    sectionIcon: "🌿",
+    text: "دُرَّة مجتمع نسائي ثقافي ناشئ — كيف يمكن أن تكون قريبًا منه أو داعمًا له؟",
+    type: "single",
+    required: true,
+    options: [
+      "أود المساهمة بخبرتي أو وقتي",
+      "أود ترشيح البرامج للنساء من حولي",
+      "أود الاثنين معًا",
+      "سأرى عندما تنطلقون",
+    ],
+  },
+  {
+    id: "q11b",
+    section: 4,
+    text: "هل لديك ملاحظة، اقتراح، أو شيء تود مشاركتنا إياه؟ 💬",
+    hint: "مساحتك الحرة — كل كلمة تقولها تهمنا",
+    type: "textarea",
+    required: false,
+    placeholder: "اكتب ما يخطر في بالك...",
+  },
+  {
+    id: "q12",
+    section: 4,
+    text: "بيانات التواصل",
+    hint: "اختياري — إن كنت تود أن تكون جزءًا من دُرَّة، أو تساهم بخبرتك أو علاقاتك أو دعمك في خدمة المرأة والأسرة، فاترك بياناتك لنتواصل معك عند الانطلاق.",
+    type: "contact",
+    required: false,
+    fields: [
+      {
+        id: "q12",
+        label: "الاسم",
+        placeholder: "اسمك...",
         inputMode: "text",
       },
       {
@@ -748,6 +1004,7 @@ function QuestionCard({
   q,
   answer,
   allAnswers = {},
+  draftAnswers = {},
   currentTextValue,
   onAnswer,
   onTextDraft,
@@ -863,6 +1120,28 @@ function QuestionCard({
         </p>
       )}
 
+      {q.id === "q1" && answer === "ذكر" && (
+        <div
+          style={{
+            marginBottom: 18,
+            padding: "16px 18px",
+            borderRadius: 16,
+            background: C.light,
+            border: `1.5px solid ${C.mid}`,
+            color: C.text,
+            lineHeight: 1.9,
+            fontSize: 14.5,
+            fontWeight: 500,
+          }}
+        >
+          {MALE_NOTICE.map((line, i) => (
+            <p key={i} style={{ margin: i === MALE_NOTICE.length - 1 ? 0 : "0 0 10px" }}>
+              {line}
+            </p>
+          ))}
+        </div>
+      )}
+
       {q.type === "contact" ? (
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {q.fields.map((field) => (
@@ -968,7 +1247,7 @@ function QuestionCard({
               key={opt}
               label={opt}
               selected={
-                q.type === "multi"
+                q.type === "multi" || q.type === "multi_other"
                   ? Array.isArray(answer) && answer.includes(opt)
                   : answer === opt
               }
@@ -976,6 +1255,30 @@ function QuestionCard({
               shape={q.type === "single" ? "circle" : "square"}
             />
           ))}
+
+          {q.type === "multi_other" &&
+            q.otherOption &&
+            Array.isArray(answer) &&
+            answer.includes(q.otherOption) && (
+              <input
+                type="text"
+                defaultValue={draftAnswers[q.otherKey] ?? allAnswers[q.otherKey] ?? ""}
+                onInput={(e) => onTextDraft(q.otherKey, e.currentTarget.value)}
+                onBlur={(e) => {
+                  onTextDraft(q.otherKey, e.currentTarget.value);
+                  e.currentTarget.style.borderColor = C.mid;
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = C.primary;
+                }}
+                placeholder={q.otherPlaceholder || "اكتب إجابتك..."}
+                style={{
+                  ...inputStyle,
+                  background: C.white,
+                  marginTop: 4,
+                }}
+              />
+            )}
         </div>
       )}
 
@@ -1424,14 +1727,27 @@ export default function DorraSurvey() {
     } catch {}
   }, []);
 
-  const visibleQuestions = QUESTIONS.filter((item) => !item.hidden);
-  const q = visibleQuestions[current];
-  const total = visibleQuestions.length;
+  const selectedGender = answersRef.current.q1 ?? answers.q1;
+  const isMalePath = selectedGender === "ذكر";
+  const femaleQuestions = QUESTIONS.filter((item) => !item.hidden);
+  const activeQuestions = isMalePath ? [QUESTIONS[0], ...MALE_QUESTIONS] : femaleQuestions;
+  const q = activeQuestions[current] || activeQuestions[0];
+  const total = activeQuestions.length;
 
   const handleAnswer = (qid, val) => {
+    const previousGender = answersRef.current.q1 ?? answers.q1;
+
+    if (qid === "q1" && previousGender && previousGender !== val) {
+      answersRef.current = { q1: val };
+      setAnswers({ q1: val });
+      setCurrent(0);
+      setError("");
+      return;
+    }
+
     answersRef.current[qid] = val;
 
-    if (qid === "q3b" && val === "عزباء") {
+    if (qid === "q3b" && !isMalePath && val === "عزباء") {
       answersRef.current.q3c = "";
       setAnswers((prev) => ({ ...prev, [qid]: val, q3c: "" }));
       setError("");
@@ -1464,10 +1780,20 @@ export default function DorraSurvey() {
 
     if (
       q.id === "q3b" &&
+      !isMalePath &&
       ["متزوجة", "مطلقة", "أرملة"].includes(ans) &&
       isEmptyAnswer(answersRef.current.q3c ?? answers.q3c)
     ) {
       return "يرجى الإجابة عن سؤال الأبناء 🌸";
+    }
+
+    if (
+      q.type === "multi_other" &&
+      Array.isArray(ans) &&
+      ans.includes(q.otherOption) &&
+      isEmptyAnswer(answersRef.current[q.otherKey] ?? answers[q.otherKey])
+    ) {
+      return "يرجى كتابة الإجابة في خانة غير ذلك 🌸";
     }
 
     if (q.type === "contact") {
@@ -1555,6 +1881,13 @@ export default function DorraSurvey() {
       timestamp: new Date().toISOString(),
     };
 
+    if (entry.q1 === "ذكر" && Array.isArray(entry.q3) && entry.q3.includes("غير ذلك")) {
+      const otherText = String(entry.q3_other || "").trim();
+      entry.q3 = entry.q3.map((item) =>
+        item === "غير ذلك" && otherText ? `غير ذلك: ${otherText}` : item
+      );
+    }
+
     const updated = [...responses, entry];
 
     setResponses(updated);
@@ -1570,7 +1903,7 @@ export default function DorraSurvey() {
   };
 
   const openAdmin = async () => {
-    if (adminPass !== "dorra2025") {
+    if (adminPass !== "mecc@1446") {
       setError("كلمة المرور غير صحيحة");
       return;
     }
@@ -1706,7 +2039,7 @@ export default function DorraSurvey() {
             boxShadow: "0 6px 24px rgba(139,74,74,0.35)",
           }}
         >
-          ابدئي الاستبيان 🌸
+          ابدأ الاستبيان 🌸
         </button>
 
         <div style={{ textAlign: "center", marginTop: 36 }}>
@@ -1798,6 +2131,7 @@ export default function DorraSurvey() {
           q={q}
           answer={answers[q.id]}
           allAnswers={answers}
+          draftAnswers={answersRef.current}
           currentTextValue={
             q.type === "contact"
               ? {
@@ -1926,13 +2260,26 @@ export default function DorraSurvey() {
               fontSize: 15.5,
               color: C.gray,
               lineHeight: 2,
-              maxWidth: 340,
+              maxWidth: 360,
               margin: "0 auto 32px",
             }}
           >
-            كل إجابة وضعتِها ستُضيء لنا طريقاً.
-            <br />
-            دُرَّة قادمة — وأنتِ جزء من بدايتها.
+            {isMalePath ? (
+              <>
+                كل إجابة شاركتَ بها أضافت لنا زاوية مهمة في فهم احتياج الفتاة
+                والمرأة في مجتمعنا.
+                <br />
+                دُرَّة تبدأ بسماع الأصوات القريبة من الواقع؛ صوت المرأة، وصوت
+                من يساندها، ويؤمن بأثرها، ويرى حاجتها إلى مساحات ثقافية وتربوية
+                تليق بها.
+              </>
+            ) : (
+              <>
+                كل إجابة وضعتِها ستُضيء لنا طريقاً.
+                <br />
+                دُرَّة قادمة — وأنتِ جزء من بدايتها.
+              </>
+            )}
           </p>
 
           <div
@@ -1945,7 +2292,7 @@ export default function DorraSurvey() {
             }}
           >
             <div style={{ fontSize: 14, color: C.dark, fontWeight: 700 }}>
-              تابعينا قريباً على منصاتنا 🌿
+              {isMalePath ? "نسعد بقربك من دُرَّة 🌿" : "تابعينا قريباً على منصاتنا 🌿"}
             </div>
             <div
               style={{
@@ -1955,7 +2302,9 @@ export default function DorraSurvey() {
                 lineHeight: 1.7,
               }}
             >
-              سيتم التواصل معكِ عند الانطلاق إن تركتِ بياناتكِ
+              {isMalePath
+                ? "سيتم التواصل معك عند الانطلاق إن تركت بياناتك، سواء للمساهمة بخبرة، أو اقتراح، أو دعم، أو ترشيح البرامج لمن حولك."
+                : "سيتم التواصل معكِ عند الانطلاق إن تركتِ بياناتكِ"}
             </div>
           </div>
 

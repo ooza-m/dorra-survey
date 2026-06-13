@@ -546,10 +546,9 @@ const QUESTIONS = [
 ];
 
 const MALE_NOTICE = [
-  "دُرَّة مساحة ثقافية تربوية ناشئة، وُجهت في أصلها لفهم احتياج الفتاة والمرأة في دولة الإمارات، وبناء برامج تلامس واقعها، وتثري فكرها، وتساند أثرها في أسرتها ومجتمعها.",
-  "ومع ذلك، فإن رأيك محل تقدير إن كنت أبًا، أو زوجًا، أو أخًا، أو متخصصًا في التربية أو الثقافة أو العمل المجتمعي؛ وترى أهمية وجود مؤسسات تُعين المرأة، وتثري فكرها، وتدعم أثرها في أسرتها ومجتمعها.",
+  "دُرَّة مساحة ثقافية تربوية ناشئة، وُجهت في أصلها لفهم احتياج الفتاة والمرأة في دولة الإمارات.",
+  "ومع ذلك، فإن رأيك محل تقدير إن كنت أبًا، أو زوجًا، أو متخصصًا؛ وترى أهمية وجود مؤسسات تدعم فكر المرأة وأثرها في أسرتها ومجتمعها.",
   "نرجو أن تجيب عن الأسئلة التالية من زاوية ما تراه من احتياجات الفتيات والنساء من حولك، أو من واقع خبرتك واهتمامك.",
-  "مشاركتك تساعدنا على فهم أوسع، وبناء دُرَّة بصورة أنفع وأقرب للمجتمع.",
 ];
 
 const MALE_QUESTIONS = [
@@ -601,11 +600,8 @@ const MALE_QUESTIONS = [
     otherKey: "q3_other",
     otherPlaceholder: "اكتب صلتك بالموضوع...",
     options: [
-      "أب",
-      "زوج",
-      "أخ / ابن",
-      "تربوي أو معلم",
-      "مختص في الأسرة أو الاستشارات",
+      "أب / زوج",
+      "مختص في التربية أو الأسرة",
       "مهتم بالثقافة والعمل المجتمعي",
       "غير ذلك",
     ],
@@ -620,9 +616,9 @@ const MALE_QUESTIONS = [
     options: [
       "الفتيات في سن الدراسة",
       "طالبات الجامعة",
-      "الشابات في بداية حياتهن",
+      "المتزوجات حديثًا",
       "الأمهات",
-      "ربات البيوت",
+      "العاطلات عن العمل",
       "الموظفات",
     ],
   },
@@ -702,7 +698,6 @@ const MALE_QUESTIONS = [
       "نعم، لكن الخيارات المتاحة ليست بالمستوى المطلوب",
       "توجد خيارات جيدة، لكنها لا تصل للجميع",
       "لا أرى حاجة كبيرة حاليًا",
-      "لست متأكدًا",
     ],
   },
   {
@@ -1120,28 +1115,6 @@ function QuestionCard({
         </p>
       )}
 
-      {q.id === "q1" && answer === "ذكر" && (
-        <div
-          style={{
-            marginBottom: 18,
-            padding: "16px 18px",
-            borderRadius: 16,
-            background: C.light,
-            border: `1.5px solid ${C.mid}`,
-            color: C.text,
-            lineHeight: 1.9,
-            fontSize: 14.5,
-            fontWeight: 500,
-          }}
-        >
-          {MALE_NOTICE.map((line, i) => (
-            <p key={i} style={{ margin: i === MALE_NOTICE.length - 1 ? 0 : "0 0 10px" }}>
-              {line}
-            </p>
-          ))}
-        </div>
-      )}
-
       {q.type === "contact" ? (
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {q.fields.map((field) => (
@@ -1282,6 +1255,30 @@ function QuestionCard({
         </div>
       )}
 
+      {q.id === "q1" && answer === "ذكر" && (
+        <div
+          style={{
+            marginTop: 16,
+            color: C.dark,
+            lineHeight: 1.9,
+            fontSize: 14.5,
+            fontWeight: 600,
+          }}
+        >
+          <p style={{ margin: "0 0 8px", fontWeight: 800 }}>ملاحظة:</p>
+          {MALE_NOTICE.map((line, i) => (
+            <p
+              key={i}
+              style={{
+                margin: i === MALE_NOTICE.length - 1 ? 0 : "0 0 8px",
+              }}
+            >
+              {line}
+            </p>
+          ))}
+        </div>
+      )}
+
       {shouldShowChildrenQuestion && childrenQuestion && (
         <div
           style={{
@@ -1323,12 +1320,34 @@ function QuestionCard({
 // ADMIN PANEL
 // ═══════════════════════════════════════════
 function AdminPanel({ responses, onClose }) {
-  const total = responses.length;
+  const [activePath, setActivePath] = useState("female");
+
+  const isFemaleMode = activePath === "female";
+  const pathResponses = responses.filter((r) =>
+    isFemaleMode ? r.q1 !== "ذكر" : r.q1 === "ذكر"
+  );
+
+  const total = pathResponses.length;
+
+  const toItems = (value) => {
+    if (Array.isArray(value)) return value;
+
+    return String(value || "")
+      .split("|")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  };
 
   const count = (qid, val) =>
-    responses.filter((r) =>
-      Array.isArray(r[qid]) ? r[qid].includes(val) : r[qid] === val
-    ).length;
+    pathResponses.filter((r) => {
+      const items = toItems(r[qid]);
+
+      return items.some((item) => {
+        if (item === val) return true;
+        if (val === "غير ذلك" && String(item).startsWith("غير ذلك")) return true;
+        return false;
+      });
+    }).length;
 
   const pct = (n) => (total > 0 ? Math.round((n / total) * 100) : 0);
 
@@ -1361,64 +1380,114 @@ function AdminPanel({ responses, onClose }) {
             height: "100%",
             width: `${pct(n)}%`,
             background: `linear-gradient(90deg,${C.dark},${C.primary})`,
+            borderRadius: 10,
           }}
         />
       </div>
     </div>
   );
 
+  const femaleFieldIds = [
+    "q1",
+    "q1b",
+    "q1c",
+    "q2",
+    "q3",
+    "q3b",
+    "q3c",
+    "q4",
+    "q5",
+    "q6",
+    "q7",
+    "q8",
+    "q8b",
+    "q9",
+    "q10",
+    "q11",
+    "q11b",
+    "q12",
+    "q13",
+    "q14",
+    "timestamp",
+  ];
+
+  const femaleHeaders = [
+    "الجنس",
+    "الجنسية",
+    "الإمارة",
+    "العمر",
+    "الوضع الحالي",
+    "الحالة الاجتماعية",
+    "أبناء",
+    "علاقة بالقراءة",
+    "الموضوعات",
+    "المحتوى العربي",
+    "البرامج المطلوبة",
+    "الاستشارات الأسرية",
+    "الاستشارات الثقافية",
+    "قابلية الدفع",
+    "طريقة المشاركة",
+    "الانضمام",
+    "ملاحظات",
+    "الاسم",
+    "واتساب",
+    "البريد",
+    "الوقت",
+  ];
+
+  const maleFieldIds = [
+    "q1",
+    "q1b",
+    "q1c",
+    "q2",
+    "q3",
+    "q3b",
+    "q4",
+    "q5",
+    "q6",
+    "q7",
+    "q8",
+    "q8b",
+    "q9",
+    "q10",
+    "q11",
+    "q11b",
+    "q12",
+    "q13",
+    "q14",
+    "timestamp",
+  ];
+
+  const maleHeaders = [
+    "الجنس",
+    "الجنسية",
+    "الإمارة",
+    "العمر",
+    "صلة بالموضوع",
+    "الفئة المستفيدة",
+    "علاقة بالقراءة والثقافة",
+    "الموضوعات الأنفع",
+    "المحتوى العربي",
+    "البرامج النافعة",
+    "الاستشارات الأسرية",
+    "مناقشة الكتب والأفكار",
+    "دعم البرامج",
+    "طريقة المشاركة",
+    "الدعم المجتمعي",
+    "ملاحظات",
+    "الاسم",
+    "واتساب",
+    "البريد",
+    "الوقت",
+  ];
+
   const exportCSV = () => {
-    if (responses.length === 0) return;
+    if (pathResponses.length === 0) return;
 
-    const headers = [
-      "الجنس",
-      "الجنسية",
-      "الإمارة",
-      "العمر",
-      "الوضع الحالي",
-      "الحالة الاجتماعية",
-      "أبناء",
-      "علاقة بالقراءة",
-      "الموضوعات",
-      "المحتوى العربي",
-      "البرامج المطلوبة",
-      "الاستشارات الأسرية",
-      "الاستشارات الثقافية",
-      "قابلية الدفع",
-      "طريقة المشاركة",
-      "الانضمام",
-      "ملاحظات",
-      "الاسم",
-      "واتساب",
-      "البريد",
-      "الوقت",
-    ];
+    const headers = isFemaleMode ? femaleHeaders : maleHeaders;
+    const fieldIds = isFemaleMode ? femaleFieldIds : maleFieldIds;
 
-    const fieldIds = [
-      "q1",
-      "q1b",
-      "q1c",
-      "q2",
-      "q3",
-      "q3b",
-      "q3c",
-      "q4",
-      "q5",
-      "q6",
-      "q7",
-      "q8",
-      "q8b",
-      "q9",
-      "q10",
-      "q11",
-      "q11b",
-      "q12",
-      "q13",
-      "q14",
-      "timestamp",
-    ];
-
-    const rows = responses.map((r) =>
+    const rows = pathResponses.map((r) =>
       fieldIds.map((id) => {
         const v = r[id];
         return Array.isArray(v) ? v.join(" | ") : v || "";
@@ -1438,14 +1507,14 @@ function AdminPanel({ responses, onClose }) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "dorra_survey.csv";
+    a.download = isFemaleMode ? "dorra_survey_female.csv" : "dorra_survey_male.csv";
     a.click();
     URL.revokeObjectURL(url);
   };
 
-  const contacts = responses.filter((r) => r.q12 || r.q13 || r.q14);
+  const contacts = pathResponses.filter((r) => r.q12 || r.q13 || r.q14);
 
-  const statGroups = [
+  const femaleStatGroups = [
     { qid: "q1", title: "الجنس", opts: QUESTIONS[0].options },
     { qid: "q1b", title: "الجنسية", opts: QUESTIONS[1].options },
     { qid: "q1c", title: "الإمارة", opts: QUESTIONS[2].options },
@@ -1472,6 +1541,55 @@ function AdminPanel({ responses, onClose }) {
     { qid: "q11", title: "الانضمام لدُرَّة", opts: QUESTIONS[15].options },
   ];
 
+  const maleStatGroups = [
+    { qid: "q1", title: "الجنس", opts: QUESTIONS[0].options },
+    { qid: "q1b", title: "الجنسية", opts: MALE_QUESTIONS[0].options },
+    { qid: "q1c", title: "الإمارة", opts: MALE_QUESTIONS[1].options },
+    { qid: "q2", title: "الفئة العمرية", opts: MALE_QUESTIONS[2].options },
+    { qid: "q3", title: "صلة المشارِك بالموضوع", opts: MALE_QUESTIONS[3].options },
+    { qid: "q3b", title: "الفئات الأكثر استفادة", opts: MALE_QUESTIONS[4].options },
+    { qid: "q4", title: "علاقة الفتيات والنساء بالقراءة والثقافة", opts: MALE_QUESTIONS[5].options },
+    { qid: "q5", title: "الموضوعات الأنفع", opts: MALE_QUESTIONS[6].options },
+    { qid: "q6", title: "توفر المحتوى العربي", opts: MALE_QUESTIONS[7].options },
+    { qid: "q7", title: "البرامج النافعة", opts: MALE_QUESTIONS[8].options },
+    { qid: "q8", title: "الحاجة إلى الاستشارات", opts: MALE_QUESTIONS[9].options },
+    { qid: "q8b", title: "مناقشة الكتب والأفكار", opts: MALE_QUESTIONS[10].options },
+    { qid: "q9", title: "المساهمة المالية أو دعم البرامج", opts: MALE_QUESTIONS[11].options },
+    { qid: "q10", title: "طريقة المشاركة الأنسب", opts: MALE_QUESTIONS[12].options },
+    { qid: "q11", title: "الدعم المجتمعي لدُرَّة", opts: MALE_QUESTIONS[13].options },
+  ];
+
+  const statGroups = isFemaleMode ? femaleStatGroups : maleStatGroups;
+
+  const TabButton = ({ mode, children }) => {
+    const active = activePath === mode;
+
+    return (
+      <button
+        type="button"
+        onClick={() => setActivePath(mode)}
+        style={{
+          flex: 1,
+          minWidth: 130,
+          padding: "11px 18px",
+          borderRadius: 14,
+          border: `1.5px solid ${active ? C.primary : C.mid}`,
+          background: active
+            ? `linear-gradient(135deg, ${C.dark}, ${C.primary})`
+            : C.white,
+          color: active ? "white" : C.dark,
+          cursor: "pointer",
+          fontFamily: "Tajawal, Arial, sans-serif",
+          fontWeight: 800,
+          fontSize: 14,
+          boxShadow: active ? "0 4px 14px rgba(139,74,74,0.2)" : "none",
+        }}
+      >
+        {children}
+      </button>
+    );
+  };
+
   return (
     <div
       style={{
@@ -1485,7 +1603,7 @@ function AdminPanel({ responses, onClose }) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "flex-start",
-          marginBottom: 24,
+          marginBottom: 18,
           flexWrap: "wrap",
           gap: 12,
         }}
@@ -1495,7 +1613,7 @@ function AdminPanel({ responses, onClose }) {
             لوحة النتائج — دُرَّة
           </h2>
           <p style={{ fontSize: 14, color: C.gray }}>
-            {total} استجابة مسجلة
+            {total} استجابة في {isFemaleMode ? "مسار الأنثى" : "مسار الذكر"}
           </p>
         </div>
 
@@ -1523,7 +1641,8 @@ function AdminPanel({ responses, onClose }) {
             onClick={onClose}
             style={{
               background: C.soft,
-                borderRadius: 20,
+              border: `1px solid ${C.mid}`,
+              borderRadius: 20,
               padding: "9px 20px",
               cursor: "pointer",
               color: C.dark,
@@ -1537,47 +1656,71 @@ function AdminPanel({ responses, onClose }) {
         </div>
       </div>
 
+      <div
+        style={{
+          display: "flex",
+          gap: 10,
+          marginBottom: 20,
+          flexWrap: "wrap",
+        }}
+      >
+        <TabButton mode="female">مسار الأنثى</TabButton>
+        <TabButton mode="male">مسار الذكر</TabButton>
+      </div>
+
       {total === 0 ? (
         <div style={{ textAlign: "center", padding: 60, color: C.gray }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>📊</div>
-          <p style={{ fontSize: 15 }}>لا توجد استجابات بعد</p>
+          <p style={{ fontSize: 15 }}>
+            لا توجد استجابات في {isFemaleMode ? "مسار الأنثى" : "مسار الذكر"} بعد
+          </p>
         </div>
       ) : (
         <>
-          {statGroups.map(({ qid, title, opts }) => (
-            <div
-              key={qid}
-              style={{
-                background: C.white,
-                borderRadius: 16,
-                padding: "20px 24px",
-                marginBottom: 14,
-                border: "1px solid #F0E0E0",
-                boxShadow: "0 2px 12px rgba(193,126,126,0.07)",
-              }}
-            >
-              <h3
+          {statGroups.map(({ qid, title, opts }) => {
+            const visibleOpts =
+              qid === "q1b" ? opts.filter((opt) => count(qid, opt) > 0) : opts;
+
+            if (visibleOpts.length === 0) return null;
+
+            return (
+              <div
+                key={qid}
                 style={{
-                  fontSize: 15,
-                  fontWeight: 800,
-                  color: C.dark,
-                  marginBottom: 16,
+                  background: C.white,
+                  borderRadius: 16,
+                  padding: "20px 24px",
+                  marginBottom: 14,
+                  border: "1px solid #F0E0E0",
+                  boxShadow: "0 2px 12px rgba(193,126,126,0.07)",
                 }}
               >
-                {title}
-              </h3>
-              {(qid === "q1b" ? opts.filter((opt) => count(qid, opt) > 0) : opts).map((opt) => (
-                <Bar key={opt} label={opt} n={count(qid, opt)} />
-              ))}
-            </div>
-          ))}
+                <h3
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 800,
+                    color: C.dark,
+                    marginBottom: 16,
+                  }}
+                >
+                  {title}
+                </h3>
+
+                {visibleOpts.map((opt) => (
+                  <Bar key={opt} label={opt} n={count(qid, opt)} />
+                ))}
+              </div>
+            );
+          })}
 
           {contacts.length > 0 && (
             <div
               style={{
-                    borderRadius: 16,
+                background: C.light,
+                borderRadius: 16,
                 padding: "20px 24px",
-                    marginTop: 8,
+                border: `1px solid ${C.mid}`,
+                marginTop: 8,
               }}
             >
               <h3
@@ -1606,7 +1749,8 @@ function AdminPanel({ responses, onClose }) {
                           <th
                             key={h}
                             style={{
-                                                textAlign: "right",
+                              padding: "8px 12px",
+                              textAlign: "right",
                               color: C.dark,
                               fontWeight: 700,
                               whiteSpace: "nowrap",
@@ -1648,7 +1792,7 @@ function AdminPanel({ responses, onClose }) {
             </div>
           )}
 
-          {responses.filter((r) => r.q11b).length > 0 && (
+          {pathResponses.filter((r) => r.q11b).length > 0 && (
             <div
               style={{
                 background: C.white,
@@ -1668,17 +1812,18 @@ function AdminPanel({ responses, onClose }) {
                 }}
               >
                 💬 ملاحظات واقتراحات (
-                {responses.filter((r) => r.q11b).length})
+                {pathResponses.filter((r) => r.q11b).length})
               </h3>
 
-              {responses
+              {pathResponses
                 .filter((r) => r.q11b)
                 .map((r, i) => (
                   <div
                     key={i}
                     style={{
                       background: C.soft,
-                                padding: "12px 16px",
+                      borderRadius: 10,
+                      padding: "12px 16px",
                       marginBottom: 10,
                       fontSize: 14,
                       color: C.text,
@@ -1990,6 +2135,19 @@ export default function DorraSurvey() {
               إجابتكِ في هذا الاستبيان القصير ليست مجرد رأي، بل لبنة تساعدنا
               على تشكيل دُرَّة بما يليق بالمرأة في الإمارات، وبما يصنع أثراً
               أعمق بإذن الله.
+            </p>
+
+            <p
+              style={{
+                margin: "12px 0 0",
+                color: C.dark,
+                opacity: 0.78,
+                fontSize: 14.5,
+                fontWeight: 400,
+                lineHeight: 1.8,
+              }}
+            >
+              *إن كنتَ ذكرًا فنسعد بمشاركتك في السؤال التالي
             </p>
           </div>
         </div>

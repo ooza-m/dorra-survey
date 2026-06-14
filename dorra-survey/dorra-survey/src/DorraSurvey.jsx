@@ -501,7 +501,7 @@ const QUESTIONS = [
     required: true,
     options: [
       "أود التطوع فقط",
-      "أود الاستفادة فقط",
+      " (المشاركة في الرامج والأنشطة) أود الاستفادة فقط",
       "أود الاثنين معاً",
       "سأرى عندما تنطلقون",
     ],
@@ -520,6 +520,8 @@ const QUESTIONS = [
     section: 4,
     text: "بيانات التواصل",
     hint: "إن كنتِ تودين أن تكوني جزءًا من دُرَّة",
+    subHint:
+      "اتركي بياناتكِ إن أحببتِ أن نبقى على تواصل معكِ، سواء للتطوع، أو حضور البرامج، أو معرفة أخبار دُرَّة عند الانطلاق.",
     type: "contact",
     required: false,
     fields: [
@@ -1112,6 +1114,21 @@ function QuestionCard({
               ({answer.length}/{q.maxSelect})
             </span>
           )}
+        </p>
+      )}
+
+      {q.subHint && (
+        <p
+          style={{
+            fontSize: 13.8,
+            color: C.gray,
+            marginTop: -8,
+            marginBottom: 16,
+            fontWeight: 500,
+            lineHeight: 1.8,
+          }}
+        >
+          {q.subHint}
         </p>
       )}
 

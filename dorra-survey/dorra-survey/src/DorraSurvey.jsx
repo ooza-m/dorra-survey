@@ -22,6 +22,9 @@ const C = {
 const SHEET_URL =
   "https://script.google.com/macros/s/AKfycbwbqpDWm2tvn_M0Si4LVArjFcG9Oq11X5LLOuJ7zMglBJw7Mt3aOz3QPHbHf4HQ1KKF/exec";
 
+const ADMIN_PASSWORD = "mecc@1446";
+const OFFICIAL_RESULTS_PASSWORD = "dorra-view";
+
 async function sendToSheets(data) {
   try {
     const body = new URLSearchParams();
@@ -1864,6 +1867,259 @@ function AdminPanel({ responses, onClose }) {
   );
 }
 
+
+// ═══════════════════════════════════════════
+// OFFICIAL RESULTS PANEL
+// ═══════════════════════════════════════════
+function OfficialResultsPanel({ responses, onClose }) {
+  const pathResponses = responses.filter((r) => r.q1 !== "ذكر");
+  const total = pathResponses.length;
+
+  const toItems = (value) => {
+    if (Array.isArray(value)) return value;
+
+    return String(value || "")
+      .split("|")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  };
+
+  const count = (qid, val) =>
+    pathResponses.filter((r) => {
+      const items = toItems(r[qid]);
+      return items.some((item) => item === val);
+    }).length;
+
+  const pct = (n) => (total > 0 ? Math.round((n / total) * 100) : 0);
+
+  const hasSensitiveInfo = (value) => {
+    const text = String(value || "");
+
+    const emailRegex = /[^\s@]+@[^\s@]+\.[^\s@]+/i;
+    const phoneRegex = /(?:\+?\d[\d\s\-()]{6,}\d)/;
+    const socialOrContactWords =
+      /(رقمي|واتسابي|واتس\s?اب|واتس|هاتف|جوال|تلفون|بريدي|إيميلي|ايميلي|ايميل|email|سنابي|سناب|انستغرام|انستقرام|instagram|snapchat|حسابي)/i;
+
+    return emailRegex.test(text) || phoneRegex.test(text) || socialOrContactWords.test(text);
+  };
+
+  const getFirstName = (name) => {
+    const first = String(name || "").trim().split(/\s+/).filter(Boolean)[0];
+    return first || "مشاركة";
+  };
+
+  const publicSuggestions = pathResponses.filter(
+    (r) => r.q11b && !hasSensitiveInfo(r.q11b)
+  );
+
+  const Bar = ({ label, n }) => (
+    <div style={{ marginBottom: 10 }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          fontSize: 13,
+          marginBottom: 3,
+          color: C.text,
+        }}
+      >
+        <span style={{ flex: 1, paddingLeft: 8 }}>{label}</span>
+        <span style={{ fontWeight: 700, color: C.primary, flexShrink: 0 }}>
+          {n} ({pct(n)}%)
+        </span>
+      </div>
+      <div
+        style={{
+          height: 7,
+          background: C.mid,
+          borderRadius: 10,
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            height: "100%",
+            width: `${pct(n)}%`,
+            background: `linear-gradient(90deg,${C.dark},${C.primary})`,
+            borderRadius: 10,
+          }}
+        />
+      </div>
+    </div>
+  );
+
+  const femaleStatGroups = [
+    { qid: "q1", title: "الجنس", opts: QUESTIONS[0].options },
+    { qid: "q1b", title: "الجنسية", opts: QUESTIONS[1].options },
+    { qid: "q1c", title: "الإمارة", opts: QUESTIONS[2].options },
+    { qid: "q2", title: "الفئة العمرية", opts: QUESTIONS[3].options },
+    { qid: "q3", title: "الوضع الحالي", opts: QUESTIONS[4].options },
+    { qid: "q3b", title: "الحالة الاجتماعية", opts: QUESTIONS[5].options },
+    { qid: "q3c", title: "وجود أبناء", opts: QUESTIONS[6].options },
+    { qid: "q4", title: "علاقة بالقراءة", opts: QUESTIONS[7].options },
+    { qid: "q5", title: "الموضوعات المفضلة", opts: QUESTIONS[8].options },
+    { qid: "q6", title: "المحتوى العربي", opts: QUESTIONS[9].options },
+    {
+      qid: "q7",
+      title: "البرامج والمشاريع المطلوبة",
+      opts: QUESTIONS[10].options,
+    },
+    { qid: "q8", title: "الاستشارات الأسرية", opts: QUESTIONS[11].options },
+    {
+      qid: "q8b",
+      title: "الاستشارات الثقافية",
+      opts: QUESTIONS[12].options,
+    },
+    { qid: "q9", title: "قابلية الدفع للبرامج", opts: QUESTIONS[13].options },
+    { qid: "q10", title: "طريقة المشاركة", opts: QUESTIONS[14].options },
+    { qid: "q11", title: "الانضمام لدُرَّة", opts: QUESTIONS[15].options },
+  ];
+
+  return (
+    <div
+      style={{
+        fontFamily: "Tajawal, Arial, sans-serif",
+        direction: "rtl",
+        padding: "24px 20px 60px",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          marginBottom: 18,
+          flexWrap: "wrap",
+          gap: 12,
+        }}
+      >
+        <div>
+          <h2 style={{ fontSize: 22, color: C.dark, fontWeight: 800 }}>
+            لوحة النتائج — دُرَّة
+          </h2>
+          <p style={{ fontSize: 14, color: C.gray, lineHeight: 1.8 }}>
+            {total} استجابة في مسار الأنثى
+            <br />
+            <span style={{ fontSize: 12.5 }}>
+              تعرض هذه اللوحة مؤشرات عامة دون بيانات تواصل المشاركات.
+            </span>
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={onClose}
+          style={{
+            background: C.soft,
+            border: `1px solid ${C.mid}`,
+            borderRadius: 20,
+            padding: "9px 20px",
+            cursor: "pointer",
+            color: C.dark,
+            fontFamily: "Tajawal, Arial, sans-serif",
+            fontWeight: 700,
+            fontSize: 13,
+          }}
+        >
+          ← العودة
+        </button>
+      </div>
+
+      {total === 0 ? (
+        <div style={{ textAlign: "center", padding: 60, color: C.gray }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>📊</div>
+          <p style={{ fontSize: 15 }}>لا توجد استجابات في مسار الأنثى بعد</p>
+        </div>
+      ) : (
+        <>
+          {femaleStatGroups.map(({ qid, title, opts }) => {
+            const visibleOpts =
+              qid === "q1b" ? opts.filter((opt) => count(qid, opt) > 0) : opts;
+
+            if (visibleOpts.length === 0) return null;
+
+            return (
+              <div
+                key={qid}
+                style={{
+                  background: C.white,
+                  borderRadius: 16,
+                  padding: "20px 24px",
+                  marginBottom: 14,
+                  border: "1px solid #F0E0E0",
+                  boxShadow: "0 2px 12px rgba(193,126,126,0.07)",
+                }}
+              >
+                <h3
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 800,
+                    color: C.dark,
+                    marginBottom: 16,
+                  }}
+                >
+                  {title}
+                </h3>
+
+                {visibleOpts.map((opt) => (
+                  <Bar key={opt} label={opt} n={count(qid, opt)} />
+                ))}
+              </div>
+            );
+          })}
+
+          {publicSuggestions.length > 0 && (
+            <div
+              style={{
+                background: C.white,
+                borderRadius: 16,
+                padding: "20px 24px",
+                border: "1px solid #F0E0E0",
+                marginTop: 14,
+                boxShadow: "0 2px 12px rgba(193,126,126,0.07)",
+              }}
+            >
+              <h3
+                style={{
+                  fontSize: 15,
+                  fontWeight: 800,
+                  color: C.dark,
+                  marginBottom: 16,
+                }}
+              >
+                💬 ملاحظات واقتراحات ({publicSuggestions.length})
+              </h3>
+
+              {publicSuggestions.map((r, i) => (
+                <div
+                  key={i}
+                  style={{
+                    background: C.soft,
+                    borderRadius: 10,
+                    padding: "12px 16px",
+                    marginBottom: 10,
+                    fontSize: 14,
+                    color: C.text,
+                    lineHeight: 1.7,
+                    borderRight: `3px solid ${C.primary}`,
+                  }}
+                >
+                  <div
+                    style={{ fontSize: 12, color: C.gray, marginBottom: 4 }}
+                  >
+                    {getFirstName(r.q12)} — {r.q1c || "—"} — {r.q2 || "—"}
+                  </div>
+                  {r.q11b}
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
 // ═══════════════════════════════════════════
 // MAIN APP
 // ═══════════════════════════════════════════
@@ -2065,10 +2321,16 @@ export default function DorraSurvey() {
   };
 
   const openAdmin = async () => {
-    if (adminPass !== "mecc@1446") {
+    const pass = adminPass.trim();
+    const isAdminPass = pass === ADMIN_PASSWORD;
+    const isOfficialPass = pass === OFFICIAL_RESULTS_PASSWORD;
+
+    if (!isAdminPass && !isOfficialPass) {
       setError("كلمة المرور غير صحيحة");
       return;
     }
+
+    const nextStep = isAdminPass ? "admin" : "official";
 
     setAdminLoading(true);
     setError("");
@@ -2081,15 +2343,15 @@ export default function DorraSurvey() {
         localStorage.setItem("dorra_v3_responses", JSON.stringify(remoteResponses));
       } catch {}
 
-      setStep("admin");
+      setStep(nextStep);
       setShowAdmin(false);
       setError("");
     } catch (err) {
-      console.log("Admin results loading failed:", err);
+      console.log("Results loading failed:", err);
 
       // في حال تعذر التحميل من الشيت، ندخل اللوحة بالنسخة المحلية فقط
-      // لكن نخبرك أن النتائج قد لا تكون كاملة.
-      setStep("admin");
+      // لكن النتائج قد لا تكون كاملة.
+      setStep(nextStep);
       setShowAdmin(false);
       setError("");
     } finally {
@@ -2510,6 +2772,15 @@ export default function DorraSurvey() {
     return (
       <Layout noPad>
         <AdminPanel responses={responses} onClose={() => setStep("intro")} />
+      </Layout>
+    );
+  }
+
+  // OFFICIAL RESULTS
+  if (step === "official") {
+    return (
+      <Layout noPad>
+        <OfficialResultsPanel responses={responses} onClose={() => setStep("intro")} />
       </Layout>
     );
   }
